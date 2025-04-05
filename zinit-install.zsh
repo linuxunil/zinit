@@ -755,36 +755,37 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $2 - mode, "" - normal, "-u" - update, "-t" - test
 # $3 - subdirectory (not path) with working copy, needed for -t and -u
 .zinit-mirror-using-svn() {
-    setopt localoptions extendedglob warncreateglobal
-    local url="$1" update="$2" directory="$3"
-
-    (( ${+commands[svn]} )) || \
-        builtin print -Pr -- "${ZINIT[col-error]}Warning:%f%b Subversion not found" \
-            ", please install it to use \`${ZINIT[col-obj]}svn%f%b' ice."
-
-    if [[ "$update" = "-t" ]]; then
-        (
-            () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
-            local -a out1 out2
-            out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
-            out2=( "${(f@)"$(LANG=C svn info)"}" )
-
-            out1=( "${(M)out1[@]:#Revision:*}" )
-            out2=( "${(M)out2[@]:#Revision:*}" )
-            [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
-            return 1
-        )
-        return $?
-    fi
-    if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
-        ( () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
-          command svn update
-          return $? )
-    else
-        command svn checkout --non-interactive -q "$url" "$directory"
-    fi
-    return $?
-} # ]]]
+  builtin print -Pr -- "{ZINIT[col-error]}Warning Github svn support depriciated"
+#     setopt localoptions extendedglob warncreateglobal
+#     local url="$1" update="$2" directory="$3"
+#
+#     (( ${+commands[svn]} )) || \
+#         builtin print -Pr -- "${ZINIT[col-error]}Warning:%f%b Subversion not found" \
+#             ", please install it to use \`${ZINIT[col-obj]}svn%f%b' ice."
+#
+#     if [[ "$update" = "-t" ]]; then
+#         (
+#             () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
+#             local -a out1 out2
+#             out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
+#             out2=( "${(f@)"$(LANG=C svn info)"}" )
+#
+#             out1=( "${(M)out1[@]:#Revision:*}" )
+#             out2=( "${(M)out2[@]:#Revision:*}" )
+#             [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
+#             return 1
+#         )
+#         return $?
+#     fi
+#     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
+#         ( () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
+#           command svn update
+#           return $? )
+#     else
+#         command svn checkout --non-interactive -q "$url" "$directory"
+#     fi
+#     return $?
+ } # ]]]
 # FUNCTION: .zinit-forget-completion [[[
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
